@@ -6,7 +6,8 @@ print root
 print '%.3f' % root
 print str(root)[:7] + ' or ' + '%1.5f' % root  # to løsninger
 
+print 'x\t\tsin(x)\tcos(x)'
 val = -1
-while val <= 1:
-    print 'cos: ' + ('%1.4f' % math.cos(val)) + ', sin: ' + ('%1.4f' % math.sin(val))
+while val < 1:
+    print '%.2f\t%.4f\t%.4f' % (val, math.sin(val), math.cos(val))
     val += 0.05
