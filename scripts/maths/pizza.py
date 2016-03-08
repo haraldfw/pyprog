@@ -16,13 +16,13 @@ def getarea(step):
     start = 0.0
 
     while areatotal < quadrantarea / 3 :
-        value1 = pizza(start)
-        start += step / 2
-        value2 = pizza(start)
-        area = ((value1 + value2) / 2.0) * step / 2
-        areatotal += area
+        trapezoid_1 = pizza(start)
 
-        #print("processing s " + str(start))
+        start += step
+        trapezoid_2 = pizza(start)
+
+        area = ((trapezoid_1 + trapezoid_2) / 2.0) * step
+        areatotal += area
 
     print("t found. t = " + str(start))
 
