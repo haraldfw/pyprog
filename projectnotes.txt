@@ -1,0 +1,9 @@
+The alpine-club runs an alpine park with lifts and tracks. The guests can rent skiing-equipment, these are complete packs with skis, boots and ski-poles.
+
+There are 5 different types of packs to choose between, and the guests should be able to rent the packs with price per hour, day and week.
+
+The guests shall also have the ability to rent lift-cards. There are 3 different types of these, day-, week- and season-cards.
+Adults and children have different prices.
+
+The website must contain an overview of the different ski-packs and their respective prices. There has to be a small description for each pack.
+
