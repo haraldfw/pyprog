@@ -1,4 +1,7 @@
+DROP TABLE IF EXISTS sale_ski_pack;
+DROP TABLE IF EXISTS sale_lift_card;
 DROP TABLE IF EXISTS ski_packs;
+DROP TABLE IF EXISTS lift_cards;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE ski_packs (
@@ -25,7 +28,8 @@ CREATE TABLE users (
   username      TEXT NOT NULL,
   name_first    TEXT NOT NULL,
   name_sur      TEXT NOT NULL,
-  password_hash TEXT NOT NULL
+  password_hash TEXT NOT NULL,
+  joined DATE NOT NULL
 );
 
 CREATE TABLE sale_ski_pack (
