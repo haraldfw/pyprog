@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<title>Nyhetsblogg</title>
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='style.css') }}">
+<body>
+<div id="menubar">
+    <button></button>
+    <div>
+        <div>
+            {% if entries.username %}
+            <p>Logged in as {{entries.username}}</p>
+            <form action="{{ url_for('index') }}" method=post
+                  class="usersubmit">
+                <input type="submit" name="Logout" value="Logout">
+            </form>
+            {% else %}
+            <form action="{{ url_for('index') }}" method=post
+                  class="usersubmit">
+                <input type="submit" name="Login" value="Login">
+                <input type="submit" name="Register" value="Register">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="flash">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for category, message in messages %}
+        {{ message }}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</div>
+<div class="page">
+
+</div>
+</body>
+</html>

@@ -25,18 +25,16 @@ CREATE TABLE lift_cards (
 
 CREATE TABLE users (
   email         TEXT PRIMARY KEY,
-  username      TEXT NOT NULL,
-  name_first    TEXT NOT NULL,
-  name_sur      TEXT NOT NULL,
+  phone         TEXT NOT NULL,
   password_hash TEXT NOT NULL,
-  joined DATE NOT NULL
+  joined        DATE NOT NULL
 );
 
 CREATE TABLE sale_ski_pack (
   date        DATE    NOT NULL,
   ski_pack_id INTEGER NOT NULL,
-  FOREIGN KEY (ski_pack_id) REFERENCES ski_packs (id),
   user_email  TEXT    NOT NULL,
+  FOREIGN KEY (ski_pack_id) REFERENCES ski_packs (id),
   FOREIGN KEY (user_email) REFERENCES users (email),
   PRIMARY KEY (ski_pack_id, user_email)
 );

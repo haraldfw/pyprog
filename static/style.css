@@ -1,0 +1,41 @@
+h1 h3 p {
+    font-family: "Georgia", Georgia, sans-serif;
+}
+
+h1 {
+    color: #0099FF;
+}
+
+p {
+    word-wrap: break-word;
+}
+
+#menubar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+#menubar li {
+    float: left;
+}
+
+#menubar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+#menubar li a:hover {
+    background-color: #111;
+}
+
+.page {
+    width: 50%;
+    margin: 0 auto;
+}
