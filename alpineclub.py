@@ -36,7 +36,20 @@ def init_db():
     db.commit()
 
 
-init_db()
+def put_db(table, values):
+    query = "INSERT INTO " + table + " VALUES ("
+    for value in values:
+        query += "?, "
+    query = query[:-2] + ")"
+    db = get_db()
+    db.execute(query, values)
+    db.commit()
+
+
+def initsampledata():
+    put_db("users", ["haraldfw@gmail.com", "90977322",
+                     generate_password_hash("asdfQWE123"),
+                     time.strftime('YYYY-MM-DD')])
 
 
 def query_db(query, args=(), one=False):
@@ -58,30 +71,36 @@ def checkcredentials(email, pw):
 @app.route('/myprofile', methods=['GET', 'POST'])
 def myprofile():
     if request.method == 'GET':
-        print "stuff"
+        user = query_db("SELECT * FROM users WHERE email= ?",
+                        [session['email']], one=True)
+        entries = {}
+        entries['email'] = user[0]
+        entries['phone'] = user[1]
+        entries['joined'] = user[3]
+        return render_template('profile.html', entries=entries)
+    else:
+        if "submitdeluser" in request.form:
+            return render_template('deluser.html')
+        elif 'submitchangepw' in request.form:
+            oldpw = request.form['oldpw']
+            newpw = request.form['newpw']
+            repeatpw = request.form['repeatpw']
+
+            if not checkcredentials(session['email'], oldpw):
+                flash('Nåværende passord er ikke riktig')
+            elif newpw != repeatpw:
+                flash('Passordene er ikke like')
+            else:
+                db = get_db()
+                db.execute('UPDATE users SET password_hash = ? WHERE email = ?',
+                           [generate_password_hash(newpw), session['email']])
+                db.commit()
+                flash('Passord endret')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    entries = {}
-    entries['buttons'] = {'My page', 'Poop'}
-    if request.method == 'GET':
-        if 'username' in session:
-            session['email'] = escape(session['username'])
-        else:
-            session['email'] = None
-    else:
-        if 'Login' in request.form:
-            return redirect(url_for('login'))
-        elif 'Register' in request.form:
-            return redirect(url_for('registeruser'))
-        elif 'Logout' in request.form:
-            return redirect(url_for('logout'))
-        elif 'Home' in request.form:
-            return redirect(url_for('index'))
-        elif 'My_Profile' in request.form:
-            return redirect(url_for('myprofile'))
-    return render_template('index.html', entries=entries)
+    return render_template('index.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -123,6 +142,7 @@ def login():
     if request.method == 'POST':
         if checkcredentials(request.form['email'], request.form['password']):
             session['email'] = request.form['email']
+            session['logged_in'] = True
             return redirect(url_for('index'))
         else:
             flash('Feil e-post eller passord.')
@@ -132,8 +152,23 @@ def login():
 @app.route('/logout')
 def logout():
     # Remove the username from the session if it's there
-    session.pop('username', None)
+    session.pop('email', None)
+    session.pop('logged_in', None)
     return redirect(url_for('index'))
+
+
+@app.route('/deluser', methods=['GET', 'POST'])
+def deluser():
+    if request.method == 'GET':
+        return render_template('deluser.html')
+    else:
+        if checkcredentials(session['email'], request.form['password']):
+            db = get_db()
+            db.execute('DELETE FROM users WHERE email = ?', [session['email']])
+            db.commit()
+            return 'lek'
+        return 'kek'
+    return 'sek'
 
 
 @app.teardown_appcontext
@@ -144,13 +179,13 @@ def close_db(error):
 
 @app.route('/add', methods=['POST'])
 def add_entry():
-    db = get_db()
     tittel = request.form['tittel']
     nyhet = request.form['nyhet']
     forfatter = request.form['forfatter']
     dato = time.strftime('%Y-%m-%d')
     # sjekker at alle felter er fyllt ut
     if str(tittel).strip() and str(nyhet).strip() and str(forfatter).strip():
+        db = get_db()
         db.execute(
                 'INSERT INTO nyheter (tittel, nyhet, forfatter, dato) VALUES (?, ?, ?, ?)',
                 [tittel, nyhet, forfatter, dato])
@@ -171,3 +206,5 @@ def shownewsonly():
 
 if __name__ == '__main__':
     app.run()
+    init_db()
+    initsampledata()

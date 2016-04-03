@@ -1,9 +1,14 @@
-h1 h3 p {
-    font-family: "Georgia", Georgia, sans-serif;
+body {
+    font-family: "Droid Sans";
 }
 
-h1 {
-    color: #0099FF;
+h1, h2, h3 {
+    color: #0055BB;
+    font-family: "Droid Serif";
+}
+
+h2 {
+    font-size: large;
 }
 
 p {
@@ -30,12 +35,102 @@ p {
     text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
 #menubar li a:hover {
-    background-color: #111;
+    background-color: cyan;
 }
 
 .page {
     width: 50%;
     margin: 0 auto;
+}
+
+.content {
+
+    padding: 10em;
+    margin: 1em;
+}
+
+#flash {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.magicbox {
+    width: min-content;
+    margin: 2em auto;
+    padding: 1em 2em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#fieldwrapper input {
+    margin: 0.5em auto 0;
+}
+
+.submitbutton {
+    padding: 0.2em 2em;
+    margin: 0.5em auto;
+}
+
+#login {
+    text-align: center;
+}
+
+.warning {
+    color: red;
+}
+
+.sectiontitle {
+    padding: 0.1em 1em;
+    margin: 1em auto 0;
+    background-color: #EEEEEE;
+    border: thin inset #CCCCCC;
+    border-radius: 0.3em 0.3em 0 0;
+}
+
+.sectiontitle p {
+    font-size: 1.2em;
+    margin: 0.4em;
+}
+
+.section {
+    padding: 0.5em 1em;
+    margin: 0 auto 1em;
+    border: thin inset #CCCCCC;
+    border-radius: 0 0 0.3em 0.3em;
+    border-top: none;
+}
+
+#footer {
+    width: 75%;
+    margin: 1.5em auto;
+    text-align: center;
+    padding: 1.5em;
+    border-top: thin inset #333333;
+}
+
+input[type=text], input[type=password] {
+    background-color: #fafafa;
+    width: 440px;
+    max-width: 100%;
+    min-height: 34px;
+    padding: 8px 14px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+    outline: none;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    box-shadow:  0 4px 8px #DDD;
+    background-color: #ffffff;
+}
+
+input[type=submit] {
+    box-sizing: border-box;
+    display: inline-block;
+    color: #333;
+    padding: 6px 12px;
+}
+
+input[type=submit]:hover {
+    box-shadow:  0 4px 8px #DDD;
 }

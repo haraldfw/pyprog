@@ -1,23 +1,4 @@
-<!doctype html>
-<html>
-<title>Alpinklubben</title>
-<link rel=stylesheet type=text/css
-      href="{{ url_for('static', filename='style.css') }}">
-<body>
-<div class="page">
-    <div id="menubar">
-        <ul>
-            <li><a href="{{ url_for('index') }}">Hjem</a></li>
-            {% if session.logged_in == True %}
-            <li style="float:right"><a href="{{ url_for('login') }}">Logg inn</a></li>
-            <li style="float:right"><a href="{{ url_for('registeruser') }}">Registrer</a></li>
-            {% else %}
-            <li style="float:right"><a href="{{ url_for('myprofile') }}">{{entries.email}}</a></li>
-            <li style="float:right"><a href="{{ url_for('logout') }}">Logg ut</a></li>
-            {% endif %}
-        </ul>
-    </div>
-    <h1>Alpinklubben</h1>|
-</div>
-</body>
-</html>
+{% extends "layout.html" %}
+{% block body %}
+<h1>Alpinklubben</h1>
+{% endblock %}

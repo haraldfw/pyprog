@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="sectiontitle">
+    <p>Profil</p>
+</div>
+<div class="section">
+    <p>E-post: {{ entries.email }}</p>
+    <p>Tlf.: {{ entries.phone }}</p>
+</div>
+<div class="sectiontitle">
+    <p>Endre passord
+</div>
+<div class="section">
+    <form method="POST" name="pwchange">
+        <p><input name="oldpw" type="password" placeholder="Nåværende passord">
+        <p><input name="newpw" type="password" placeholder="Nytt passord">
+        <p><input name="repeatpw" type="password"
+                  placeholder="Gjenta nytt passord">
+        <p><input name="submitchangepw" type="submit" value="Endre passord">
+    </form>
+</div>
+<div class="sectiontitle">
+    <p>Slett bruker
+</div>
+<div class="section">
+    <form method="post" name="deluser">
+        <p class="warning">Advarsel: Dette kan ikke omgjøres!</p>
+        <p><input name="submitdeluser" type="submit" value="Slett bruker">
+    </form>
+</div>
+{% endblock %}

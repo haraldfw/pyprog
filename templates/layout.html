@@ -1,42 +1,41 @@
 <!doctype html>
 <html>
-<title>Nyhetsblogg</title>
+<title>Alpinklubben</title>
 <link rel=stylesheet type=text/css
       href="{{ url_for('static', filename='style.css') }}">
 <body>
-<div id="menubar">
-    <button></button>
-    <div>
-        <div>
-            {% if entries.username %}
-            <p>Logged in as {{entries.username}}</p>
-            <form action="{{ url_for('index') }}" method=post
-                  class="usersubmit">
-                <input type="submit" name="Logout" value="Logout">
-            </form>
-            {% else %}
-            <form action="{{ url_for('index') }}" method=post
-                  class="usersubmit">
-                <input type="submit" name="Login" value="Login">
-                <input type="submit" name="Register" value="Register">
-            </form>
-            {% endif %}
-        </div>
-    </div>
-</div>
-<div class="flash">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for category, message in messages %}
-        {{ message }}
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-</div>
 <div class="page">
-
+    <div id="menubar">
+        <ul>
+            <li><a href="/">Hjem</a></li>
+            <li><a href="/">Heiskort</a></li>
+            {% if not session.email %}
+            <li style="float:right"><a href="/login">Logg inn</a></li>
+            <li style="float:right"><a href="/register">Registrer</a></li>
+            {% else %}
+            <li style="float:right"><a href="/logout">Logg ut</a></li>
+            <li style="float:right"><a href="/myprofile">{{ session.email }}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="content">
+        <div id="flash">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class=flashes>
+                {% for category, message in messages %}
+                {{ message }}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+        {% block body %}{% endblock %}
+    </div>
+    <div id="footer">
+        <i>Harald Floor Wilhelmsen, 2016</i>
+    </div>
 </div>
 </body>
 </html>

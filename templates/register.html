@@ -1,14 +1,16 @@
-<!doctype html>
-<html>
-<title>Register</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<body>
-<div class="page">
+{% extends "layout.html" %}
+{% block body %}
+<div class="sectiontitle">
+    <p>Registrer</p>
+</div>
+<div class="section">
     <form action="" method="post">
-        <p><input type=text name=email placeholder="E-Mail">
-        <p><input type=text name=phone placeholder="Telefon">
-        <p><input type=password name=password placeholder="Passord">
-        <p><input type=password name=repeatpw placeholder="Gjenta passord">
+        <div class="fieldwrapper">
+            <p><input type=text name=email placeholder="E-Mail">
+            <p><input type=text name=phone placeholder="Telefon">
+            <p><input type=password name=password placeholder="Passord">
+            <p><input type=password name=repeatpw placeholder="Gjenta passord">
+        </div>
         <p><input type=submit value=Login>
     </form>
     <div class="flash">
@@ -23,5 +25,4 @@
         {% endwith %}
     </div>
 </div>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+<form method="post">
+    <p>Slett bruker {{ session.email }}? Skriv inn passord for å bekrefte sletting.</p>
+    <p><input type="password" name="password" placeholder="Password">
+    <p><input type="submit" value="Slett {{ session.email }}"></p>
+</form>
+{% endblock %}
