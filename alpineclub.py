@@ -56,6 +56,12 @@ def initsampledata():
                                                " Poopetipoop Poopetipoop Poopetipoop"
                                                " Poopetipoop Poopetipoop Poopetipoop"
         , "5 kryn", "1 kryn", "0 kryn"])
+    put_db("ski_packs", ["1", "Tittel bittel 2", "Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+        , "5 kryn", "1 kryn", "0 kryn"])
 
 init_db()
 
@@ -188,7 +194,6 @@ def deluser():
 @app.route('/skipacks')
 def skipacks():
     res = query_db("SELECT * FROM ski_packs")
-    print res
     entries = {}
     skipacks = []
     for pack in res:
