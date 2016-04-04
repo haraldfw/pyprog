@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+{% for skipack in entries.skipacks %}
+<div class="sectiontitle">
+    <p>{{ skipack.title }}</p>
+</div>
+<div class="section">
+    <div><p>{{ skipack.description }}</p></div>
+    <div><p>Priser:</p>
+        <ul>
+            <li>Per time: {{ skipack.price_hour }}</li>
+            <li>Per dag: {{ skipack.price_day }}</li>
+            <li>Per uke: {{ skipack.price_week }}</li>
+        </ul>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

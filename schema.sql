@@ -25,9 +25,10 @@ CREATE TABLE lift_cards (
 
 CREATE TABLE users (
   email         TEXT PRIMARY KEY,
-  phone         TEXT NOT NULL,
-  password_hash TEXT NOT NULL,
-  joined        DATE NOT NULL
+  phone         TEXT    NOT NULL,
+  password_hash TEXT    NOT NULL,
+  joined        DATE    NOT NULL,
+  privilege     INTEGER NOT NULL -- 0:user 1:rabatt-mann 2:admin 3:superadmin
 );
 
 CREATE TABLE sale_ski_pack (

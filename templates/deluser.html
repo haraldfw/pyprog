@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="post">
-    <p>Slett bruker {{ session.email }}? Skriv inn passord for å bekrefte sletting.</p>
-    <p><input type="password" name="password" placeholder="Password">
+<div class="sectiontitle">
+    <p>Slett bruker {{ session.email }}</p>
+</div>
+<div class="section">
+<form method="post" action="/deluser">
+    <p>Skriv inn passord for å bekrefte sletting.</p>
+    <p><input type="password" name="password" placeholder="Password" value="">
     <p><input type="submit" value="Slett {{ session.email }}"></p>
 </form>
+</div>
 {% endblock %}

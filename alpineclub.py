@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 import re
 import sqlite3
 import time
 
 from flask import g, render_template, flash, Flask, session, redirect, url_for, \
-    escape, request
+    request
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
@@ -49,7 +49,15 @@ def put_db(table, values):
 def initsampledata():
     put_db("users", ["haraldfw@gmail.com", "90977322",
                      generate_password_hash("asdfQWE123"),
-                     time.strftime('YYYY-MM-DD')])
+                     time.strftime('YYYY-MM-DD'), 3])
+    put_db("ski_packs", ["0", "Tittel bittel", "Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+                                               " Poopetipoop Poopetipoop Poopetipoop"
+        , "5 kryn", "1 kryn", "0 kryn"])
+
+init_db()
 
 
 def query_db(query, args=(), one=False):
@@ -65,20 +73,21 @@ def checkcredentials(email, pw):
     if user is None:
         return False
     else:
+        print generate_password_hash(str(pw))
+        print user['password_hash']
+        print pw
         return check_password_hash(user['password_hash'], pw)
 
 
 @app.route('/myprofile', methods=['GET', 'POST'])
 def myprofile():
-    if request.method == 'GET':
-        user = query_db("SELECT * FROM users WHERE email= ?",
-                        [session['email']], one=True)
-        entries = {}
-        entries['email'] = user[0]
-        entries['phone'] = user[1]
-        entries['joined'] = user[3]
-        return render_template('profile.html', entries=entries)
-    else:
+    user = query_db("SELECT * FROM users WHERE email= ?",
+                    [session['email']], one=True)
+    entries = {}
+    entries['email'] = user[0]
+    entries['phone'] = user[1]
+    entries['joined'] = user[3]
+    if request.method == 'POST':
         if "submitdeluser" in request.form:
             return render_template('deluser.html')
         elif 'submitchangepw' in request.form:
@@ -87,20 +96,28 @@ def myprofile():
             repeatpw = request.form['repeatpw']
 
             if not checkcredentials(session['email'], oldpw):
-                flash('Nåværende passord er ikke riktig')
+                flash("bleh")
             elif newpw != repeatpw:
                 flash('Passordene er ikke like')
+            elif not validpassword(newpw):
+                flash("Nytt passord ikke gyldig. Minst en stor og "
+                      "liten og bokstav og et tall er noedvendig.")
             else:
                 db = get_db()
                 db.execute('UPDATE users SET password_hash = ? WHERE email = ?',
                            [generate_password_hash(newpw), session['email']])
                 db.commit()
                 flash('Passord endret')
+    return render_template('profile.html', entries=entries)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
+
+def validpassword(password):
+    return not re.search('[a-z][A-Z][0-9]', password)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -119,16 +136,16 @@ def registeruser():
             flash('Ugyldig telefonnummer. Bare tast inn tall.')
         elif password != repeatpw:
             flash('Passordene er ikke like')
-        elif re.search('[a-z][A-Z][0-9]', password):
-            flash('passordet må ha minst én stor og liten '
-                  'bokstav samt ett tall')
+        elif not validpassword(password):
+            flash("Password must contain at least one upper and lower case "
+                  "letter and a number.")
         elif len(password) < 8:
-            flash('Passord må være lengre enn 8 karakterer.')
+            flash('Password must have at least 8 characters.')
         else:
             pwhash = generate_password_hash(password)
             db = get_db()
-            db.execute('INSERT INTO users VALUES(?, ?, ?, ?)',
-                       [email, phone, pwhash, time.strftime('YYYY-MM-DD')])
+            db.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?)',
+                       [email, phone, pwhash, time.strftime('YYYY-MM-DD'), 0])
             db.commit()
 
             session['logged_in'] = True
@@ -159,16 +176,31 @@ def logout():
 
 @app.route('/deluser', methods=['GET', 'POST'])
 def deluser():
-    if request.method == 'GET':
-        return render_template('deluser.html')
-    else:
+    if request.method == 'POST':
         if checkcredentials(session['email'], request.form['password']):
             db = get_db()
             db.execute('DELETE FROM users WHERE email = ?', [session['email']])
             db.commit()
-            return 'lek'
-        return 'kek'
-    return 'sek'
+            return logout()
+    return render_template('deluser.html')
+
+
+@app.route('/skipacks')
+def skipacks():
+    res = query_db("SELECT * FROM ski_packs")
+    print res
+    entries = {}
+    skipacks = []
+    for pack in res:
+        skipack = {}
+        skipack['title'] = pack[1]
+        skipack['description'] = pack[2]
+        skipack['price_hour'] = pack[3]
+        skipack['price_day'] = pack[4]
+        skipack['price_week'] = pack[5]
+        skipacks.append(skipack)
+    entries['skipacks'] = skipacks
+    return render_template("skipacks.html", entries=entries)
 
 
 @app.teardown_appcontext
@@ -196,6 +228,13 @@ def add_entry():
     return redirect(url_for('index'))
 
 
+@app.route('/resetdb')
+def resetdb():
+    db = get_db()
+    db.execute("DELETE FROM users")
+    initsampledata()
+    return index()
+
 @app.route('/nyheter')
 def shownewsonly():
     db = get_db()
@@ -206,5 +245,4 @@ def shownewsonly():
 
 if __name__ == '__main__':
     app.run()
-    init_db()
     initsampledata()
