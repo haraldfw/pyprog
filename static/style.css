@@ -15,6 +15,11 @@ p {
     word-wrap: break-word;
 }
 
+#menubar {
+    border: cyan thin;
+    border-radius: 3px;
+}
+
 #menubar ul {
     list-style-type: none;
     margin: 0;
@@ -36,7 +41,7 @@ p {
 }
 
 #menubar li a:hover {
-    background-color: cyan;
+    background-color: #00AAFF;
 }
 
 .page {
