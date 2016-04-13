@@ -120,13 +120,20 @@ input[type=text], input[type=password] {
     min-height: 34px;
     padding: 8px 14px;
     border-radius: 3px;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
     outline: none;
 }
 
 input[type=text]:focus, input[type=password]:focus {
-    box-shadow:  0 4px 8px #DDD;
+    box-shadow: 0 4px 8px #DDD;
     background-color: #ffffff;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 input[type=submit] {
@@ -137,5 +144,5 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-    box-shadow:  0 4px 8px #DDD;
+    box-shadow: 0 4px 8px #DDD;
 }

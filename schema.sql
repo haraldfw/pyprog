@@ -5,22 +5,17 @@ DROP TABLE IF EXISTS lift_cards;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE ski_packs (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  title       TEXT   NOT NULL,
-  description TEXT   NOT NULL,
-  price_hour  DOUBLE NOT NULL,
-  price_day   DOUBLE NOT NULL,
-  price_week  DOUBLE NOT NULL
+  title       TEXT PRIMARY KEY NOT NULL,
+  description TEXT             NOT NULL,
+  price_hour  DOUBLE           NOT NULL,
+  price_day   DOUBLE           NOT NULL,
+  price_week  DOUBLE           NOT NULL
 );
 
 CREATE TABLE lift_cards (
-  id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-  price_child_day    DOUBLE NOT NULL,
-  price_child_week   DOUBLE NOT NULL,
-  price_child_season DOUBLE NOT NULL,
-  price_adult_day    DOUBLE NOT NULL,
-  price_adult_week   DOUBLE NOT NULL,
-  price_adult_season DOUBLE NOT NULL
+  time_period TEXT PRIMARY KEY NOT NULL,
+  price_child DOUBLE           NOT NULL,
+  price_adult DOUBLE           NOT NULL
 );
 
 CREATE TABLE users (

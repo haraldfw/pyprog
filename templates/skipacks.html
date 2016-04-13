@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
+<div class="sectiontitle">
+    <p>Utleie av skipakker</p>
+</div>
+<div class="section">
+    Her finner du pakkene med ski vi leier ut i parken vår.
+</div>
 {% for skipack in entries.skipacks %}
 <div class="sectiontitle">
     <p>{{ skipack.title }}</p>

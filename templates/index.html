@@ -1,4 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Alpinklubben</h1>
+<div class="sectiontitle">
+    <p>Velkommen!</p>
+</div>
+<div class="section">
+
+</div>
+<div class="sectiontitle">
+    <p>Her er vi!</p>
+</div>
+<div class="section">
+    {% with %}
+    {% set location=(63.430915, 10.395137) %}
+    {% set style="width:inherit;height:500px;"%}
+    {{
+    googlemap(
+    "simple-map",
+    location.0, location.1,
+    markers=[location,],
+    style=style
+    )
+    }}
+
+    {% endwith %}
+</div>
 {% endblock %}

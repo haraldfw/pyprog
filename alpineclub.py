@@ -2,12 +2,14 @@
 import re
 import sqlite3
 import time
+from flask.ext.googlemaps import GoogleMaps
 
 from flask import g, render_template, flash, Flask, session, redirect, url_for, \
     request
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
+GoogleMaps(app)
 
 DATABASE = 'alpineclub.db'
 DEBUG = True
@@ -120,6 +122,12 @@ def myprofile():
     return render_template('profile.html', entries=entries)
 
 
+@app.route('/liftcards', methods=['GET', 'POST'])
+def liftcards():
+    entries = {}
+    entries['liftcards'] = query_db('SELECT * FROM lift_cards')
+    return render_template('liftcards.html', entries=entries)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -198,16 +206,16 @@ def deluser():
 def skipacks():
     res = query_db("SELECT * FROM ski_packs")
     entries = {}
-    skipacks = []
+    skipacklist = []
     for pack in res:
         skipack = {}
-        skipack['title'] = pack[1]
-        skipack['description'] = pack[2]
-        skipack['price_hour'] = pack[3]
-        skipack['price_day'] = pack[4]
-        skipack['price_week'] = pack[5]
-        skipacks.append(skipack)
-    entries['skipacks'] = skipacks
+        skipack['title'] = pack[0]
+        skipack['description'] = pack[1]
+        skipack['price_hour'] = pack[2]
+        skipack['price_day'] = pack[3]
+        skipack['price_week'] = pack[4]
+        skipacklist.append(skipack)
+    entries['skipacks'] = skipacklist
     return render_template("skipacks.html", entries=entries)
 
 
@@ -217,29 +225,9 @@ def close_db(error):
         g.sqlite_db.close()
 
 
-@app.route('/add', methods=['POST'])
-def add_entry():
-    tittel = request.form['tittel']
-    nyhet = request.form['nyhet']
-    forfatter = request.form['forfatter']
-    dato = time.strftime('%Y-%m-%d')
-    # sjekker at alle felter er fyllt ut
-    if str(tittel).strip() and str(nyhet).strip() and str(forfatter).strip():
-        db = get_db()
-        db.execute(
-                'INSERT INTO nyheter (tittel, nyhet, forfatter, dato) VALUES (?, ?, ?, ?)',
-                [tittel, nyhet, forfatter, dato])
-        db.commit()
-        flash('Innlegget ble sendt og lagret i databasen')
-    else:
-        flash('Nyhet ikke lagt til. Fyll alle feltene.')
-    return redirect(url_for('index'))
-
-
 @app.route('/resetdb')
 def resetdb():
-    db = get_db()
-    db.execute("DELETE FROM users")
+    init_db()
     initsampledata()
     return index()
 
