@@ -122,6 +122,18 @@ def myprofile():
     return render_template('profile.html', entries=entries)
 
 
+@app.route('/buy')
+def buy(item, price):
+    email = session['email']
+    user_privilege = query_db('SELECT * FROM users WHERE email = ?', [email], one=True)
+    if user_privilege != 0:
+        price = price * 0.8
+    entries = {}
+    entries['item'] = item
+    entries['price'] = price
+
+
+
 @app.route('/liftcards', methods=['GET', 'POST'])
 def liftcards():
     entries = {}

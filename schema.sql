@@ -28,18 +28,18 @@ CREATE TABLE users (
 
 CREATE TABLE sale_ski_pack (
   date        DATE    NOT NULL,
-  ski_pack_id INTEGER NOT NULL,
+  ski_pack_title INTEGER NOT NULL,
   user_email  TEXT    NOT NULL,
-  FOREIGN KEY (ski_pack_id) REFERENCES ski_packs (id),
+  FOREIGN KEY (ski_pack_title) REFERENCES ski_packs (title),
   FOREIGN KEY (user_email) REFERENCES users (email),
-  PRIMARY KEY (ski_pack_id, user_email)
+  PRIMARY KEY (ski_pack_title, user_email)
 );
 
 CREATE TABLE sale_lift_card (
   date         DATE    NOT NULL,
-  lift_card_id INTEGER NOT NULL,
+  lift_card_time_period INTEGER NOT NULL,
   user_email   TEXT    NOT NULL,
-  FOREIGN KEY (lift_card_id) REFERENCES lift_cards (id),
+  FOREIGN KEY (lift_card_time_period) REFERENCES lift_cards (time_period),
   FOREIGN KEY (user_email) REFERENCES users (email),
-  PRIMARY KEY (lift_card_id, user_email)
+  PRIMARY KEY (lift_card_time_period, user_email)
 );
