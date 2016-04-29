@@ -1,24 +1,31 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="sectiontitle">
-    <p>Utleie av skipakker</p>
-</div>
-<div class="section">
-    Her finner du pakkene med ski vi leier ut i parken vår.
-</div>
-{% for skipack in entries.skipacks %}
-<div class="sectiontitle">
-    <p>{{ skipack.title }}</p>
-</div>
-<div class="section">
-    <div><p>{{ skipack.description }}</p></div>
-    <div><p>Priser:</p>
-        <ul>
-            <li>Per time: {{ skipack.price_hour }}kr</li>
-            <li>Per dag: {{ skipack.price_day }}kr</li>
-            <li>Per uke: {{ skipack.price_week }}kr</li>
-        </ul>
+    <div class="sectiontitle">
+        <p>Utleie av skipakker</p>
     </div>
-</div>
-{% endfor %}
+    <div class="section">
+        Her finner du skipakkene vi leier ut i parken vår.
+    </div>
+    {% for skipack in entries.skipacks %}
+        <form method="POST" action="{{ url_for('skipacks') }}">
+            <div class="sectiontitle">
+                <p>{{ skipack.title }}</p>
+            </div>
+            <div class="section">
+                <div><p>{{ skipack.description }}</p></div>
+                <div><p>Priser:</p>
+                    <ul>
+                        <li>Per time: {{ skipack.price_hour }}kr</li>
+                        <li>Per dag: {{ skipack.price_day }}kr</li>
+                        <li>Per uke: {{ skipack.price_week }}kr</li>
+                    </ul>
+                </div>
+                {% if session.email %}
+                    <input type=submit value="Kjøp" name="{{ skipack.title }}">
+                {% else %}
+                    <p>Du må være logget inn for å kjøpe.</p>
+                {% endif %}
+            </div>
+        </form>
+    {% endfor %}
 {% endblock %}

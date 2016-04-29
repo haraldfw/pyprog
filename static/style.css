@@ -113,7 +113,7 @@ p {
     border-top: thin inset #333333;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email] {
     background-color: #fafafa;
     width: 440px;
     max-width: 100%;

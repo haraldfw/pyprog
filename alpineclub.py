@@ -38,6 +38,12 @@ def init_db():
     db.commit()
     with app.open_resource('dummydata.sql', mode='r') as f:
         db.cursor().executescript(f.read())
+    db.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?)",
+               ["admin", "90977322", generate_password_hash("admin"),
+                time.strftime('YYYY-MM-DD'), 3])
+    db.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?)",
+               ["vanlig@bruker.no", "09812333", generate_password_hash("asdQWE123"),
+                time.strftime('YYYY-MM-DD'), 0])
     db.commit()
 
 
@@ -50,23 +56,6 @@ def put_db(table, values):
     db.execute(query, values)
     db.commit()
 
-
-def initsampledata():
-    put_db("users", ["haraldfw@gmail.com", "90977322",
-                     generate_password_hash("asdfQWE123"),
-                     time.strftime('YYYY-MM-DD'), 3])
-    put_db("ski_packs", ["0", "Tittel bittel", "Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-        , "5 kryn", "1 kryn", "0 kryn"])
-    put_db("ski_packs", ["1", "Tittel bittel 2", "Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-                                               " Poopetipoop Poopetipoop Poopetipoop"
-        , "5 kryn", "1 kryn", "0 kryn"])
 
 init_db()
 
@@ -94,10 +83,7 @@ def checkcredentials(email, pw):
 def myprofile():
     user = query_db("SELECT * FROM users WHERE email= ?",
                     [session['email']], one=True)
-    entries = {}
-    entries['email'] = user[0]
-    entries['phone'] = user[1]
-    entries['joined'] = user[3]
+    entries = {'email': user[0], 'phone': user[1], 'joined': user[3]}
     if request.method == 'POST':
         if "submitdeluser" in request.form:
             return render_template('deluser.html')
@@ -122,23 +108,47 @@ def myprofile():
     return render_template('profile.html', entries=entries)
 
 
-@app.route('/buy')
-def buy(item, price):
-    email = session['email']
-    user_privilege = query_db('SELECT * FROM users WHERE email = ?', [email], one=True)
-    if user_privilege != 0:
-        price = price * 0.8
-    entries = {}
-    entries['item'] = item
-    entries['price'] = price
-
+@app.route('/buy', methods=['GET', 'POST'])
+def buy():
+    if request.method == 'GET':
+        res = query_db(
+                'SELECT price_hour, price_day, price_week FROM ski_packs WHERE title = ?',
+                [session['item']], one=True)
+        if not res:
+            res = query_db(
+                    'SELECT price_child, price_adult FROM lift_cards WHERE time_period = ?',
+                    [session['item']], one=True)
+            choices = {'barn': res[0], 'voksen': res[1]}
+        else:
+            choices = {'1 time': res[0], '1 dag': res[1], '1 uke': res[2]}
+        entries = {'choices': choices}
+        return render_template('buy.html', entries=entries)
+    else:
+        session['subchoice'] = True
+        user_privilege = query_db('SELECT privilege FROM users WHERE email = ?',
+                                  [session['email']], one=True)[0]
+        discountscale = 1
+        if user_privilege != 0:
+            discountscale = 0.8
+        originalprice = request.form.keys()[0]
+        priceafterdiscount = float(originalprice) * discountscale
+        entries = {'item': session['item'],
+                   'discount': (1 - discountscale) * 100,
+                   'choice': request.form[originalprice][5:],
+                   'price': priceafterdiscount}
+        return render_template('buy.html', entries=entries)
 
 
 @app.route('/liftcards', methods=['GET', 'POST'])
 def liftcards():
-    entries = {}
-    entries['liftcards'] = query_db('SELECT * FROM lift_cards')
-    return render_template('liftcards.html', entries=entries)
+    if request.method == 'POST':
+        session['item'] = request.form.keys()[0]
+        session['subchoice'] = False
+        return redirect(url_for('buy'))
+    else:
+        entries = {'liftcards': query_db('SELECT * FROM lift_cards')}
+        return render_template('liftcards.html', entries=entries)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -214,21 +224,27 @@ def deluser():
     return render_template('deluser.html')
 
 
-@app.route('/skipacks')
+@app.route('/skipacks', methods=['GET', 'POST'])
 def skipacks():
-    res = query_db("SELECT * FROM ski_packs")
-    entries = {}
-    skipacklist = []
-    for pack in res:
-        skipack = {}
-        skipack['title'] = pack[0]
-        skipack['description'] = pack[1]
-        skipack['price_hour'] = pack[2]
-        skipack['price_day'] = pack[3]
-        skipack['price_week'] = pack[4]
-        skipacklist.append(skipack)
-    entries['skipacks'] = skipacklist
-    return render_template("skipacks.html", entries=entries)
+    if request.method == 'POST':
+        session['item'] = request.form.keys()[0]
+        session['subchoice'] = False
+        return redirect(url_for('buy'))
+    else:
+        res = query_db("SELECT * FROM ski_packs")
+        entries = {}
+        skipacklist = []
+        for pack in res:
+            skipack = {
+                'title': pack[0],
+                'description': pack[1],
+                'price_hour': pack[2],
+                'price_day': pack[3],
+                'price_week': pack[4]
+            }
+            skipacklist.append(skipack)
+        entries['skipacks'] = skipacklist
+        return render_template("skipacks.html", entries=entries)
 
 
 @app.teardown_appcontext
@@ -240,8 +256,8 @@ def close_db(error):
 @app.route('/resetdb')
 def resetdb():
     init_db()
-    initsampledata()
     return index()
+
 
 @app.route('/nyheter')
 def shownewsonly():
@@ -253,4 +269,3 @@ def shownewsonly():
 
 if __name__ == '__main__':
     app.run()
-    initsampledata()

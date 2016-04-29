@@ -1,17 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="sectiontitle">
-    <p>Registrer</p>
-</div>
-<div class="section">
-    <form method="post">
-        <div class="fieldwrapper">
-            <p><input type=text name=email placeholder="E-Mail">
-            <p><input type=text name=phone placeholder="Telefon">
-            <p><input type=password name=password placeholder="Passord">
-            <p><input type=password name=repeatpw placeholder="Gjenta passord">
-        </div>
-        <p><input type=submit value=Login>
-    </form>
-</div>
+    <div class="sectiontitle">
+        <p>Registrer</p>
+    </div>
+    <div class="section">
+        <form method="post">
+            <div class="fieldwrapper">
+                <p><input type=email name=email placeholder="E-Mail" required>
+                <p><input type=text name=phone placeholder="Telefon" required>
+                <p><input type=password name=password placeholder="Passord"
+                          required>
+                <p><input type=password name=repeatpw
+                          placeholder="Gjenta passord" required>
+            </div>
+            <p><input type=submit value=Login>
+        </form>
+    </div>
 {% endblock %}

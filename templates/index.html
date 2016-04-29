@@ -1,27 +1,26 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="sectiontitle">
-    <p>Velkommen!</p>
-</div>
-<div class="section">
-
-</div>
-<div class="sectiontitle">
-    <p>Her er vi!</p>
-</div>
-<div class="section">
-    {% with %}
-    {% set location=(63.430915, 10.395137) %}
-    {% set style="width:inherit;height:500px;"%}
-    {{
-    googlemap(
+    <div class="sectiontitle">
+        <p>Velkommen!</p>
+    </div>
+    <div class="section">
+        <p>Velkommen til siden vår! Lag deg bruker ved å trykke "registrer" i
+            menybaren øverst på siden!</p>
+    </div>
+    <div class="sectiontitle">
+        <p>Her er vi!</p>
+    </div>
+    <div class="section">
+        {% with %}
+            {% set location=(63.430915, 10.395137) %}
+            {% set style="width:inherit;height:500px;" %}
+            {{ googlemap(
     "simple-map",
     location.0, location.1,
     markers=[location,],
     style=style
-    )
-    }}
+    ) }}
 
-    {% endwith %}
-</div>
+        {% endwith %}
+    </div>
 {% endblock %}

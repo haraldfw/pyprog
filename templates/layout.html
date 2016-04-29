@@ -11,25 +11,26 @@
             <li><a href="/liftcards">Heiskort</a></li>
             <li><a href="/skipacks">Skipakker</a></li>
             {% if not session.email %}
-            <li style="float:right"><a href="/login">Logg inn</a></li>
-            <li style="float:right"><a href="/register">Registrer</a></li>
+                <li style="float:right"><a href="/login">Logg inn</a></li>
+                <li style="float:right"><a href="/register">Registrer</a></li>
             {% else %}
-            <li style="float:right"><a href="/logout">Logg ut</a></li>
-            <li style="float:right"><a href="/myprofile">{{ session.email }}</a>
-            </li>
+                <li style="float:right"><a href="/logout">Logg ut</a></li>
+                <li style="float:right"><a
+                        href="/myprofile">{{ session.email }}</a>
+                </li>
             {% endif %}
         </ul>
     </div>
     <div id="content">
         <div id="flash">
             {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            <ul class=flashes>
-                {% for category, message in messages %}
-                {{ message }}
-                {% endfor %}
-            </ul>
-            {% endif %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for category, message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             {% endwith %}
         </div>
         {% block body %}{% endblock %}

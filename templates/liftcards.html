@@ -1,31 +1,40 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="sectiontitle">
-    <p>Salg av heiskort</p>
-</div>
-<div class="section">
-    <p>Her finner du de tilgjengelige heiskortene vi selger. Alle heiskortene
-        gjelder for alle løypene og har forskjellig pris for barn og voksen.
-        Nederst på siden finner du et kart over løypene i parken.</p>
-</div>
-{% for liftcard in entries.liftcards %}
-<div class="sectiontitle">
-    <p>{{ liftcard.time_period }}</p>
-</div>
-<div class="section">
-    <div><p>Priser:</p>
-        <ul>
-            <li>Barn: {{ liftcard.price_child }}kr</li>
-            <li>Voksen: {{ liftcard.price_adult }}kr</li>
-        </ul>
+    <div class="sectiontitle">
+        <p>Salg av heiskort</p>
     </div>
-</div>
-{% endfor %}
-<div class="sectiontitle">
-    <p>Løypekart</p>
-</div>
-<div class="section">
-    <img src="{{ url_for('static', filename='loypekart.jpg') }}">
-</div>
+    <div class="section">
+        <p>Her finner du de tilgjengelige heiskortene vi selger. Alle
+            heiskortene
+            gjelder for alle løypene og har forskjellig pris for barn og voksen.
+            Nederst på siden finner du et kart over løypene i parken.</p>
+    </div>
+    {% for liftcard in entries.liftcards %}
+        <form method="POST" action="{{ url_for('liftcards') }}">
+            <div class="sectiontitle">
+                <p>{{ liftcard.time_period }}</p>
+            </div>
+            <div class="section">
+                <div><p>Priser:</p>
+                    <ul>
+                        <li>Barn: {{ liftcard.price_child }}kr</li>
+                        <li>Voksen: {{ liftcard.price_adult }}kr</li>
+                    </ul>
+                </div>
+                {% if session.email %}
+                    <input type=submit value="Kjøp"
+                           name="{{ liftcard.time_period }}">
+                {% else %}
+                    <p>Du må være logget inn for å kjøpe.</p>
+                {% endif %}
+            </div>
+        </form>
+    {% endfor %}
+    <div class="sectiontitle">
+        <p>Løypekart</p>
+    </div>
+    <div class="section">
+        <img src="{{ url_for('static', filename='loypekart.jpg') }}">
+    </div>
 
 {% endblock %}

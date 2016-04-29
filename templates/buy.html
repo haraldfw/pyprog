@@ -1,10 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="sectiontitle">
-    <p>Du kjøper nå {% entries.item %}</p>
-</div>
-<div class="section">
-    <p>Her vil det komme betalingsmuligheter for å kjøpe eller leie skipakke/heiskort</p>
-    <p>Pris: {% entries.price %}</p>
-</div>
+    <div class="sectiontitle">
+        <p>Du kjøper nå {{ entries.item }}</p>
+    </div>
+    <div class="section">
+        {% if not session.subchoice %}
+            <p>Venligst velg hvilken versjon av produktet du vil ha.</p>
+            <p>Valg:</p>
+            {% for key, value in entries.choices.iteritems() %}
+                <form method="POST">
+                    <input type="submit" name="{{ value }}"
+                           value="Kjøp {{ key }}">
+                </form>
+            {% endfor %}
+        {% else %}
+            <p>*Betalingsinformasjon og sånt kommer her*</p>
+            <p>Det som er valgt for å kjøpe er '{{ entries.item }}' med
+                undervalg '{{ entries.choice }}' for en pris
+                på '{{ entries.price }}'. Prisen er beregnet etter en rabatt
+                på {{ entries.discount }}%</p>
+        {% endif %}
+    </div>
 {% endblock %}
